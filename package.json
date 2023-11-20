@@ -1,0 +1,41 @@
+{
+  "name": "mongoose-project-1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint:fix": "npx eslint src --fix",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
+    "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
+    "prettier:fix" : "npx prettier --write src",
+    "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "start:prod": "node ./dist/server.js"
+  },
+  "devDependencies": {
+    "@stylistic/eslint-plugin-js": "^1.4.0",
+    "@types/cors": "^2.8.16",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.9.2",
+    "eslint-config-prettier": "^9.0.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.1.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.54.0",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.1",
+    "morgan": "^1.10.0"
+  },
+  "engines": {
+    "node": "20.9.0",
+    "npm": "10.1.0"
+  }
+}
