@@ -5,7 +5,10 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "@stylistic/js"],
+  "plugins": [
+    "@typescript-eslint",
+    "@stylistic/js",
+  ],
   // HERE
   "extends": [
     "eslint:recommended",

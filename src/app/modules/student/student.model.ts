@@ -38,7 +38,7 @@ const guardianSchema = new Schema<Guardian>({
     type: String,
     enum: {
       values: ["father", "mother", "brother", "sister"],
-      message: `{VALUES} is not supported`,
+      message: `{VALUE} is not supported`,
     },
   },
   gender: {
@@ -71,6 +71,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
   },
 });
 
+// student schema
 const studentSchema = new Schema<Student>({
   name: userNameSchema,
   age: {
@@ -79,16 +80,19 @@ const studentSchema = new Schema<Student>({
   },
   gender: {
     type: String,
+    default: "male",
     enum: {
       values: ["male", "female"],
-      message: "{VALUES} is not supported",
+      message: "{VALUE} is not supported",
     },
     required: true,
   },
   bloodGroup: {
+    type: String,
+    required: true,
     enum: {
       values: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-      message: `{VALUES} is not supported`,
+      message: `{VALUE} is not supported`,
     },
   },
   contactNo: {
@@ -107,9 +111,10 @@ const studentSchema = new Schema<Student>({
   localGuardian: localGuardianSchema,
   isActive: {
     type: String,
+    default: "active",
     enum: {
       values: ["active", "block"],
-      message: `{Values} is not supported`,
+      message: `{VALUE} is not supported`,
     },
   },
   profileImg: {

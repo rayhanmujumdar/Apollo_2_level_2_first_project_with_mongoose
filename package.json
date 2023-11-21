@@ -4,13 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -w",
     "lint:fix": "npx eslint src --fix",
-    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
+    "lint": "eslint src --ignore-path .eslintignore --ext .js,.ts",
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
-    "prettier:fix" : "npx prettier --write src",
+    "prettier:fix": "npx prettier --write src",
     "start:dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-    "start:prod": "node ./dist/server.js"
+    "start:prod": "node ./dist/server.js",
+    "start:dev2": "nodemon ./dist/server.js"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin-js": "^1.4.0",
