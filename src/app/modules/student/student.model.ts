@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+// import validator from "validator";
 import {
   Student,
   UserName,
@@ -10,12 +11,35 @@ import {
 const userNameSchema = new Schema<UserName>({
   firstName: {
     type: String,
-    required: true,
+    maxlength: [20, "First name must be less then 20 characters"],
+    trim: true,
+    required: [
+      true,
+      "firstName must required, not other option, you must be can get me your firstName name",
+    ],
+    // validate: {
+    //   validator: function (val: string) {
+    //     const firstName = val.charAt(0).toUpperCase() + val.slice(1);
+    //     return firstName === val;
+    //   },
+    //   message: "{VALUE} is not in capitalize format",
+    // },
   },
 
-  middleName: String,
+  middleName: {
+    type: String,
+    trim: true,
+    lowercase: true,
+  },
   lastName: {
     type: String,
+    trim: true,
+    // validate: {
+    //   validator: (value: string) => {
+    //     return validator.isAlpha(value);
+    //   },
+    //   message: `Last name must only contain alphabetical characters`,
+    // },
     required: true,
   },
 });
@@ -73,7 +97,21 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 
 // student schema
 const studentSchema = new Schema<Student>({
-  name: userNameSchema,
+  name: {
+    type: userNameSchema,
+    required: [true, "name field is required"],
+  },
+  email: {
+    type: String,
+    required: [true, "Email must be required and email must be unique"],
+    // validate: {
+    //   validator: (value: string) => {
+    //     return validator.isEmail(value);
+    //   },
+    //   message: `{VALUE} is not valid email`,
+    // },
+    unique: true,
+  },
   age: {
     type: Number,
     required: true,
@@ -107,8 +145,14 @@ const studentSchema = new Schema<Student>({
     type: String,
     required: true,
   },
-  guardian: guardianSchema,
-  localGuardian: localGuardianSchema,
+  guardian: {
+    type: guardianSchema,
+    required: true,
+  },
+  localGuardian: {
+    type: localGuardianSchema,
+    required: true,
+  },
   isActive: {
     type: String,
     default: "active",

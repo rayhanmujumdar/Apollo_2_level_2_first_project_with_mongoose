@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from "express";
+import studentValidationSchema from "./student.validation";
 import {
   createStudentService,
   getAllStudentsService,
@@ -14,13 +15,15 @@ export const createStudentController = async (
 ): Promise<void> => {
   try {
     const studentInfo = req.body;
-    const result = await createStudentService(studentInfo);
+    const value = await studentValidationSchema.validateAsync(studentInfo);
+    const result = await createStudentService(value);
     res.status(201).json({
       success: true,
       message: "New Student was created successfully",
       data: result,
     });
   } catch (err: any) {
+    console.log(err);
     next(err);
   }
 };
@@ -30,7 +33,7 @@ export const getAllStudentsController = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
     const result = await getAllStudentsService();
     res.status(200).json({
@@ -48,7 +51,7 @@ export const getSingleStudentController = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Promise<void> => {
   try {
     const { id } = req.params;
     const result = await getSingleStudentService(id);
