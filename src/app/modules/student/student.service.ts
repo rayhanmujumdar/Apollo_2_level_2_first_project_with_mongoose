@@ -1,18 +1,24 @@
-import { Student } from "./student.interface";
-import StudentModel from "./student.model";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { TStudent } from "./student.interface";
+import Student from "./student.model";
 
 // create a new student service
-export const createStudentService = (studentData: Student) => {
-  const student = new StudentModel(studentData);
-  return student.save();
+export const createStudentService = async (studentData: TStudent) => {
+  if (await Student.isUserExists(studentData.email)) {
+    const err: any = new Error("Student already exist");
+    err.status = 500;
+    throw err;
+  }
+  const student = await Student.create(studentData);
+  return student;
 };
 
 // get all student service
 export const getAllStudentsService = () => {
-  return StudentModel.find({});
+  return Student.find({});
 };
 
 // get single student service
 export const getSingleStudentService = (id: string) => {
-  return StudentModel.findById(id);
+  return Student.findById(id);
 };

@@ -1,30 +1,26 @@
 // create a schema validation using joi
 import Joi from "joi";
 import {
-  Student,
-  UserName,
-  Guardian,
-  LocalGuardian,
+  TStudent,
+  TUserName,
+  TGuardian,
+  TLocalGuardian,
 } from "./student.interface";
 
-const userNameValidationSchema = Joi.object<UserName>({
+const userNameValidationSchema = Joi.object<TUserName>({
   firstName: Joi.string()
     .max(20)
-    .required()
     .trim()
-    .pattern(/^[A-Z][a-z]*$/, { name: "capitalize", invert: false })
-    .message(
-      "First name must be less than 20 characters and in capitalize format",
-    ),
-  middleName: Joi.string().trim().required().lowercase(),
+    .required()
+    .pattern(/^[A-Z][a-z]*$/, { name: "capitalize", invert: false }),
+  middleName: Joi.string().trim().lowercase(),
   lastName: Joi.string()
     .trim()
     .required()
-    .pattern(/^[A-Z][a-z]*$/, { name: "capitalize", invert: false })
-    .message("Name must be capitalize"),
+    .pattern(/^[A-Z][a-z]*$/, { name: "capitalize", invert: false }),
 });
 
-const guardianValidationSchema = Joi.object<Guardian>({
+const guardianValidationSchema = Joi.object<TGuardian>({
   name: Joi.string().required(),
   age: Joi.number().required(),
   occupation: Joi.string().required(),
@@ -35,21 +31,14 @@ const guardianValidationSchema = Joi.object<Guardian>({
     .required(),
 });
 
-const localGuardianValidationSchema = Joi.object<LocalGuardian>({
-  name: Joi.string()
-    .max(20)
-    .required()
-    .pattern(/^[A-Z][a-z]*$/, {
-      name: "capitalize",
-      invert: false,
-    })
-    .message("Name must be capitalize"),
+const localGuardianValidationSchema = Joi.object<TLocalGuardian>({
+  name: Joi.string().max(20).required(),
   address: Joi.string().required(),
   contact: Joi.string().required(),
   occupation: Joi.string().required(),
 });
 
-const studentValidationSchema = Joi.object<Student>({
+const studentValidationSchema = Joi.object<TStudent>({
   name: userNameValidationSchema.required(),
   email: Joi.string()
     .required()

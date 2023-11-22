@@ -1,18 +1,20 @@
 import { Schema, model } from "mongoose";
 // import validator from "validator";
 import {
-  Student,
-  UserName,
-  Guardian,
-  LocalGuardian,
+  TStudent,
+  TUserName,
+  TGuardian,
+  TLocalGuardian,
+  StudentModel,
+  // StudentMethods,
 } from "./student.interface";
 
 // name Schema
-const userNameSchema = new Schema<UserName>({
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     maxlength: [20, "First name must be less then 20 characters"],
-    trim: true,
+    // trim: true,
     required: [
       true,
       "firstName must required, not other option, you must be can get me your firstName name",
@@ -45,7 +47,7 @@ const userNameSchema = new Schema<UserName>({
 });
 
 // guardian schema
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   name: {
     type: String,
     required: true,
@@ -76,7 +78,7 @@ const guardianSchema = new Schema<Guardian>({
 });
 
 // localGuardian schema
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: true,
@@ -96,7 +98,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 // student schema
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   name: {
     type: userNameSchema,
     required: [true, "name field is required"],
@@ -161,10 +163,7 @@ const studentSchema = new Schema<Student>({
       message: `{VALUE} is not supported`,
     },
   },
-  profileImg: {
-    type: String,
-    required: true,
-  },
+  profileImg: String,
   permanentAddress: {
     type: String,
     required: true,
@@ -175,6 +174,18 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-const Student = model("Student", studentSchema);
+// create a custom statics method
+studentSchema.statics.isUserExists = async function (email: string) {
+  const existedUser = await this.findOne({ email });
+  return existedUser;
+};
+
+// create a custom instance method
+// studentSchema.methods.isUserExists = async function (email: string) {
+//   const isExistedUser = await Student.findOne({ email });
+//   return isExistedUser;
+// };
+
+const Student = model<TStudent, StudentModel>("Student", studentSchema);
 
 export default Student;

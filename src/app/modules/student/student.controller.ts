@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response, NextFunction } from "express";
-import studentValidationSchema from "./student.validation";
+// import studentValidationSchema from "./student.joi.validation";
+import studentValidationSchema from "./student.zod.validation";
 import {
   createStudentService,
   getAllStudentsService,
@@ -15,8 +16,11 @@ export const createStudentController = async (
 ): Promise<void> => {
   try {
     const studentInfo = req.body;
-    const value = await studentValidationSchema.validateAsync(studentInfo);
-    const result = await createStudentService(value);
+    // const value = await studentValidationSchema.validateAsync(studentInfo);
+    const zodSchemaValue = studentValidationSchema
+      .required({ profileImg: undefined })
+      .parse(studentInfo);
+    const result = await createStudentService(zodSchemaValue);
     res.status(201).json({
       success: true,
       message: "New Student was created successfully",

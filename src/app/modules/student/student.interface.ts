@@ -1,7 +1,10 @@
-type BloodType = "A" | "B" | "AB" | "O";
-type RhFactor = "+" | "-";
-export type BloodGroup = `${BloodType}${RhFactor}`;
-export type Guardian = {
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+import { Model } from "mongoose";
+
+type TBloodType = "A" | "B" | "AB" | "O";
+type TRhFactor = "+" | "-";
+export type TBloodGroup = `${TBloodType}${TRhFactor}`;
+export type TGuardian = {
   name: string;
   age: number;
   relation: "father" | "mother" | "brother" | "sister";
@@ -10,32 +13,50 @@ export type Guardian = {
   contactNo: string;
 };
 
-export type UserName = {
+export type TUserName = {
   firstName: string;
   middleName?: string;
   lastName: string;
 };
 
-export type LocalGuardian = {
+export type TLocalGuardian = {
   name: string;
   occupation: string;
   contact: string;
   address: string;
 };
 
-export type Student = {
-  name: UserName;
+export type TStudent = {
+  name: TUserName;
   email: string;
   age: number;
   gender: "male" | "female";
   contactNo: string;
   dateOfBirth: string;
   emergencyContactNo: string;
-  bloodGroup: BloodGroup;
+  bloodGroup: TBloodGroup;
   presentAddress: string;
   permanentAddress: string;
-  guardian: Guardian;
-  localGuardian: LocalGuardian;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
   profileImg: string;
   isActive: "active" | "block";
 };
+
+// for this interface model statics methods
+export interface StudentModel extends Model<TStudent> {
+  isUserExists(email: string) : Promise<TStudent>
+}
+
+
+
+// for this type model instance methods
+// export type StudentMethods = {
+//   isUserExists(id: string): Promise<TStudent | null>;
+// };
+
+// export type StudentModel = Model<
+//   TStudent,
+//   Record<string, never>,
+//   StudentMethods
+// >;
