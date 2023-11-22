@@ -37,6 +37,10 @@ const localGuardianValidationSchema = z.object({
 
 const studentValidationSchema = z.object({
   name: userNameValidationSchema.required({ middleName: undefined }),
+  password: z
+    .string({ required_error: "password must be required" })
+    .max(20, { message: "maximum password length is 20 characters required" })
+    .min(6, { message: "minimum password length is 6 characters required" }),
   email: z
     .string()
     .refine(

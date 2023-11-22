@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 // import validator from "validator";
 import {
   TStudent,
@@ -8,6 +10,7 @@ import {
   StudentModel,
   // StudentMethods,
 } from "./student.interface";
+import config from "../../config";
 
 // name Schema
 const userNameSchema = new Schema<TUserName>({
@@ -103,6 +106,12 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: userNameSchema,
     required: [true, "name field is required"],
   },
+  password: {
+    type: String,
+    required: [true, "Password must be required"],
+    minlength: 6,
+    maxlength: 20,
+  },
   email: {
     type: String,
     required: [true, "Email must be required and email must be unique"],
@@ -172,6 +181,15 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: String,
     required: true,
   },
+});
+
+// mongoose middleware function
+studentSchema.pre("save", async function () {
+  const user: TStudent = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.hash_salf_round),
+  );
 });
 
 // create a custom statics method
