@@ -72,6 +72,7 @@ const studentValidationSchema = z.object({
     required_error: "presentAddress must be required",
   }),
   profileImg: z.string().optional(),
+  isDeleted: z.boolean().default(false),
 });
 
 export default studentValidationSchema;

@@ -6,7 +6,9 @@ import {
   createStudentService,
   getAllStudentsService,
   getSingleStudentService,
+  deleteStudentDocsService,
 } from "./student.service";
+import customError from "../../lib/error";
 
 // create a new student
 export const createStudentController = async (
@@ -59,12 +61,35 @@ export const getSingleStudentController = async (
   try {
     const { id } = req.params;
     const result = await getSingleStudentService(id);
-    res.status(200).json({
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "Single student data get successfully",
+        data: result,
+      });
+    } else {
+      throw customError(404, "single student doc not found");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+// delete student controller
+export const deleteStudentDocsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const result = await deleteStudentDocsService(id);
+    res.status(201).json({
       success: true,
-      message: "Single student data get successfully",
+      message: "student docs deleted successfully",
       data: result,
     });
-  } catch (err) {
+  } catch (err: any) {
     next(err);
   }
 };

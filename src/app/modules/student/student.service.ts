@@ -22,3 +22,7 @@ export const getAllStudentsService = () => {
 export const getSingleStudentService = (id: string) => {
   return Student.findById(id);
 };
+
+export const deleteStudentDocsService = (id: string) => {
+  return Student.updateOne({ _id: id }, { isDeleted: true });
+};

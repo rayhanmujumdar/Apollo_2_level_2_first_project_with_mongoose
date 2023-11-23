@@ -3,6 +3,7 @@ import {
   createStudentController,
   getAllStudentsController,
   getSingleStudentController,
+  deleteStudentDocsController
 } from "./student.controller";
 
 const route = Router();
@@ -14,4 +15,7 @@ route.get("/", getAllStudentsController);
 
 // this api hit to get a single student
 route.get("/:id", getSingleStudentController);
+
+// this api hit to you can deleted student document
+route.delete('/:id',deleteStudentDocsController)
 export default route;

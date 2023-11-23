@@ -101,87 +101,98 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 
 // student schema
-const studentSchema = new Schema<TStudent, StudentModel>({
-  name: {
-    type: userNameSchema,
-    required: [true, "name field is required"],
-  },
-  password: {
-    type: String,
-    required: [true, "Password must be required"],
-    minlength: 6,
-    maxlength: 20,
-  },
-  email: {
-    type: String,
-    required: [true, "Email must be required and email must be unique"],
-    // validate: {
-    //   validator: (value: string) => {
-    //     return validator.isEmail(value);
-    //   },
-    //   message: `{VALUE} is not valid email`,
-    // },
-    unique: true,
-  },
-  age: {
-    type: Number,
-    required: true,
-  },
-  gender: {
-    type: String,
-    default: "male",
-    enum: {
-      values: ["male", "female"],
-      message: "{VALUE} is not supported",
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    name: {
+      type: userNameSchema,
+      required: [true, "name field is required"],
     },
-    required: true,
-  },
-  bloodGroup: {
-    type: String,
-    required: true,
-    enum: {
-      values: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
-      message: `{VALUE} is not supported`,
+    password: {
+      type: String,
+      required: [true, "Password must be required"],
+      minlength: 6,
+      maxlength: 20,
+    },
+    email: {
+      type: String,
+      required: [true, "Email must be required and email must be unique"],
+      // validate: {
+      //   validator: (value: string) => {
+      //     return validator.isEmail(value);
+      //   },
+      //   message: `{VALUE} is not valid email`,
+      // },
+      unique: true,
+    },
+    age: {
+      type: Number,
+      required: true,
+    },
+    gender: {
+      type: String,
+      default: "male",
+      enum: {
+        values: ["male", "female"],
+        message: "{VALUE} is not supported",
+      },
+      required: true,
+    },
+    bloodGroup: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+        message: `{VALUE} is not supported`,
+      },
+    },
+    contactNo: {
+      type: String,
+      required: true,
+    },
+    dateOfBirth: {
+      type: String,
+      required: true,
+    },
+    emergencyContactNo: {
+      type: String,
+      required: true,
+    },
+    guardian: {
+      type: guardianSchema,
+      required: true,
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: true,
+    },
+    isActive: {
+      type: String,
+      default: "active",
+      enum: {
+        values: ["active", "block"],
+        message: `{VALUE} is not supported`,
+      },
+    },
+    profileImg: String,
+    permanentAddress: {
+      type: String,
+      required: true,
+    },
+    presentAddress: {
+      type: String,
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
-  contactNo: {
-    type: String,
-    required: true,
-  },
-  dateOfBirth: {
-    type: String,
-    required: true,
-  },
-  emergencyContactNo: {
-    type: String,
-    required: true,
-  },
-  guardian: {
-    type: guardianSchema,
-    required: true,
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: true,
-  },
-  isActive: {
-    type: String,
-    default: "active",
-    enum: {
-      values: ["active", "block"],
-      message: `{VALUE} is not supported`,
+  {
+    toJSON: {
+      virtuals: true,
     },
   },
-  profileImg: String,
-  permanentAddress: {
-    type: String,
-    required: true,
-  },
-  presentAddress: {
-    type: String,
-    required: true,
-  },
-});
+);
 
 // mongoose middleware function
 studentSchema.pre("save", async function () {
@@ -190,6 +201,26 @@ studentSchema.pre("save", async function () {
     user.password,
     Number(config.hash_salf_round),
   );
+});
+
+studentSchema.pre("find", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre("findOne", function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.post("save", (doc, next) => {
+  doc.password = "";
+  next();
+});
+
+// virtualization
+studentSchema.virtual("fullName").get(function () {
+  return `${this.name.firstName} ${this.name.lastName} ${this.name.lastName}`;
 });
 
 // create a custom statics method
